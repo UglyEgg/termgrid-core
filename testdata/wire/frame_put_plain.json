@@ -1,1 +1,1 @@
-{"ops":[{"op":"put","x":1,"y":2,"text":"Hello"}]}
+{"ops":[{"op":"put","text":"Hi","x":0,"y":0}]}

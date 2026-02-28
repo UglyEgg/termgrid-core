@@ -15,25 +15,25 @@ This crate does **not** implement a terminal emulator. It does not parse ANSI in
 
 ## Documents
 
-- Architecture: `architecture.md`
-- Invariants: `invariants.md`
-- Non-goals: `non-goals.md`
-- Rationale: `rationale.md`
-- Performance: `performance.md`
+- Architecture: [architecture.md](./architecture.md)
+- Invariants: [invariants.md](./invariants.md)
+- Non-goals: [non-goals.md](./non-goals.md)
+- Rationale: [rationale.md](./rationale.md)
+- Performance: [performance.md](./performance.md)
 
 Contracts:
 
-- Rendering model: `contracts/rendering-model.md`
-- Style model: `contracts/style-model.md`
-- Wire format v1: `contracts/wire-format-v1.md`
+- Rendering model: [rendering-model.md](contracts/rendering-model.md)
+- Style model: [style-model.md](contracts/style-model.md)
+- Wire format v1: [wire-format-v1](contracts/wire-format-v1.md)
 
 Guides:
 
-- Getting started: `guides/getting-started.md`
-- Writing a backend: `guides/writing-a-backend.md`
-- Backend integration: `guides/backend-integration.md`
+- Getting started: [getting-started.md](guides/getting-started.md)
+- Writing a backend: [writing-a-backend](guides/writing-a-backend.md)
+- Backend integration: [backend-integration](guides/backend-integration.md)
 
 Reference:
 
-- Public API summary: `reference/public-api.md`
-- Feature flags: `reference/feature-flags.md`
+- Public API summary: [public-api.md](reference/public-api.md)
+- Feature flags: [feature-flags](reference/feature-flags.md)

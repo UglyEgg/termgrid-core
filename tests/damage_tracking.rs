@@ -36,18 +36,19 @@ fn damage_covers_all_changed_cells_for_simple_ops() {
                 y: 1,
                 w: 4,
                 h: 2,
+                glyph: " ".to_string(),
                 style: Style {
                     bold: true,
                     ..Style::plain()
                 },
             },
-            RenderOp::PutWrappedStyled {
+            RenderOp::TextBlockStyled {
                 x: 0,
                 y: 3,
                 w: 10,
                 spans: vec![Span::new("One two three", Style::plain())],
-                wrap_opts: WrapOpts::default(),
-                max_lines: Some(1),
+                wrap: WrapOpts::default(),
+                h: 1,
             },
         ],
     };

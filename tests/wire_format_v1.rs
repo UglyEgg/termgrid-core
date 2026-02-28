@@ -61,12 +61,6 @@ fn style_flags_are_representable_in_wire_v1() {
             "strikethrough": true
         })
     );
-
-    // Back-compat aliases: accept legacy field names if encountered.
-    let legacy = json!({"inverse": true, "strike": true});
-    let round: Style = serde_json::from_value(legacy).expect("deserialize legacy Style");
-    assert!(round.inverse);
-    assert!(round.strike);
 }
 
 #[test]
@@ -110,22 +104,6 @@ fn default_truncate_mode_is_omitted_on_label_op() {
 }
 
 #[test]
-fn default_truncate_mode_is_omitted_on_put_styled_op() {
-    let op = RenderOp::PutStyled {
-        x: 0,
-        y: 0,
-        w: 10,
-        spans: vec![termgrid_core::Span::new("Hi", Style::plain())],
-        truncate: TruncateMode::Clip,
-    };
-    let v = serde_json::to_value(op).expect("serialize RenderOp");
-    assert_eq!(
-        v,
-        json!({"op":"put_styled","x":0,"y":0,"w":10,"spans":[{"text":"Hi"}]})
-    );
-}
-
-#[test]
 fn default_truncate_mode_is_omitted_on_label_styled_op() {
     let op = RenderOp::LabelStyled {
         x: 0,
@@ -142,19 +120,30 @@ fn default_truncate_mode_is_omitted_on_label_styled_op() {
 }
 
 #[test]
-fn default_wrap_opts_are_omitted_on_put_wrapped_styled_op() {
-    let op = RenderOp::PutWrappedStyled {
+fn wrap_defaults_are_canonicalized_on_text_block_styled_op() {
+    let op = RenderOp::TextBlockStyled {
         x: 0,
         y: 0,
         w: 10,
+        h: u16::MAX,
         spans: vec![termgrid_core::Span::new("Hi", Style::plain())],
-        wrap_opts: WrapOpts::default(),
-        max_lines: None,
+        wrap: WrapOpts::default(),
     };
+
     let v = serde_json::to_value(op).expect("serialize RenderOp");
+
+    // Canonical v1 omits wrap when it is all-default.
     assert_eq!(
-        v,
-        json!({"op":"put_wrapped_styled","x":0,"y":0,"w":10,"spans":[{"text":"Hi"}]})
+        v.get("op").and_then(|x| x.as_str()),
+        Some("text_block_styled")
+    );
+    assert_eq!(v.get("x").and_then(|x| x.as_u64()), Some(0));
+    assert_eq!(v.get("y").and_then(|x| x.as_u64()), Some(0));
+    assert_eq!(v.get("w").and_then(|x| x.as_u64()), Some(10));
+    assert_eq!(v.get("h").and_then(|x| x.as_u64()), Some(65535));
+    assert!(
+        v.get("wrap").is_none(),
+        "wrap should be omitted when default"
     );
 }
 
@@ -168,19 +157,18 @@ fn frame_v1_fixtures_roundtrip_stably() {
         "testdata/wire/frame_clear_eos.json",
         "testdata/wire/frame_clear_rect.json",
         "testdata/wire/frame_put_plain.json",
-        "testdata/wire/frame_put_styled.json",
+        "testdata/wire/frame_put_with_style.json",
         "testdata/wire/frame_label_clip.json",
         "testdata/wire/frame_label_ellipsis.json",
-        "testdata/wire/frame_put_styled_spans_clip.json",
         "testdata/wire/frame_label_styled_clip.json",
-        "testdata/wire/frame_put_wrapped.json",
-        "testdata/wire/frame_put_wrapped_styled.json",
-        "testdata/wire/frame_put_wrapped_styled_prefix.json",
-        "testdata/wire/frame_put_wrapped_styled_max_lines.json",
+        "testdata/wire/frame_text_block.json",
+        "testdata/wire/frame_text_block_styled.json",
+        "testdata/wire/frame_text_block_styled_prefix.json",
+        "testdata/wire/frame_text_block_styled_max_lines.json",
         "testdata/wire/frame_blit.json",
         "testdata/wire/frame_fill_rect_bg.json",
-        "testdata/wire/frame_hline.json",
-        "testdata/wire/frame_vline.json",
+        "testdata/wire/frame_fill_rect_hline.json",
+        "testdata/wire/frame_fill_rect_vline.json",
         "testdata/wire/frame_box_default.json",
         "testdata/wire/frame_box_ascii.json",
     ];

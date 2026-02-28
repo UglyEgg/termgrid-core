@@ -33,20 +33,10 @@ pub struct Style {
     #[serde(default, skip_serializing_if = "is_false")]
     pub blink: bool,
     /// ANSI reverse video (SGR 7).
-    #[serde(
-        default,
-        skip_serializing_if = "is_false",
-        rename = "reverse",
-        alias = "inverse"
-    )]
+    #[serde(default, skip_serializing_if = "is_false", rename = "reverse")]
     pub inverse: bool,
     /// ANSI strikethrough (SGR 9).
-    #[serde(
-        default,
-        skip_serializing_if = "is_false",
-        rename = "strikethrough",
-        alias = "strike"
-    )]
+    #[serde(default, skip_serializing_if = "is_false", rename = "strikethrough")]
     pub strike: bool,
 }
 

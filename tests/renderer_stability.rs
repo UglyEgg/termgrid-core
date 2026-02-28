@@ -56,13 +56,13 @@ fn apply_frame_equivalent_to_apply_ops_in_order() {
         ..Default::default()
     };
 
-    let op = RenderOp::PutWrappedStyled {
+    let op = RenderOp::TextBlockStyled {
         x: 0,
         y: 0,
         w: 8,
         spans,
-        wrap_opts: wrap,
-        max_lines: Some(2),
+        wrap,
+        h: 2,
     };
 
     let mut f = Frame::default();

@@ -25,7 +25,7 @@ exclude = [
 
 keywords = ["tui", "terminal", "unicode", "deterministic", "rendering"]
 categories = ["command-line-interface", "text-processing"]
-rust-version = "1.82"
+rust-version = "1.85"
 
 [dependencies]
 unicode-segmentation = "1.11"

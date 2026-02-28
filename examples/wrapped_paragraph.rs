@@ -59,13 +59,13 @@ fn main() {
         ..Default::default()
     };
 
-    frame.ops.push(RenderOp::PutWrappedStyled {
+    frame.ops.push(RenderOp::TextBlockStyled {
         x: 2,
         y: 2,
         w: 48,
+        h: 5,
         spans,
-        wrap_opts: wrap,
-        max_lines: Some(5),
+        wrap,
     });
 
     frame.ops.push(RenderOp::Label {

@@ -128,6 +128,7 @@ fn fill_rect_writes_styled_spaces() {
         y: 0,
         w: 2,
         h: 1,
+        glyph: " ".to_string(),
         style: Style {
             fg: None,
             bg: Some(52),
@@ -252,7 +253,7 @@ fn put_styled_renders_spans_and_preserves_styles_and_continuation_cells() {
     let mut r = Renderer::new(6, 1, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutStyled {
+    f.ops.push(RenderOp::LabelStyled {
         x: 0,
         y: 0,
         w: 6,
@@ -338,7 +339,7 @@ fn put_wrapped_styled_wraps_at_word_boundaries_and_preserves_styles() {
     };
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutWrappedStyled {
+    f.ops.push(RenderOp::TextBlockStyled {
         x: 0,
         y: 0,
         w: 5,
@@ -349,8 +350,8 @@ fn put_wrapped_styled_wraps_at_word_boundaries_and_preserves_styles() {
             Span::new(" ", Style::plain()),
             Span::new("CCC", Style::plain()),
         ],
-        wrap_opts: WrapOpts::default(),
-        max_lines: None,
+        wrap: WrapOpts::default(),
+        h: u16::MAX,
     });
     r.apply(&f);
 
@@ -411,13 +412,13 @@ fn put_wrapped_styled_continuation_prefix_is_prepended_on_wrapped_lines() {
     };
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutWrappedStyled {
+    f.ops.push(RenderOp::TextBlockStyled {
         x: 0,
         y: 0,
         w: 6,
         spans: vec![Span::new("one two three", Style::plain())],
-        wrap_opts: opts,
-        max_lines: None,
+        wrap: opts,
+        h: u16::MAX,
     });
     r.apply(&f);
 
@@ -450,7 +451,7 @@ fn put_styled_ellipsis_truncates_and_writes_ellipsis_glyph() {
     let mut r = Renderer::new(4, 1, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutStyled {
+    f.ops.push(RenderOp::LabelStyled {
         x: 0,
         y: 0,
         w: 4,
@@ -498,7 +499,7 @@ fn put_styled_ellipsis_is_plain_style_even_if_last_span_is_styled() {
     };
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutStyled {
+    f.ops.push(RenderOp::LabelStyled {
         x: 0,
         y: 0,
         w: 4,
@@ -714,6 +715,7 @@ fn clear_rect_clears_only_the_target_region() {
         y: 0,
         w: 6,
         h: 2,
+        glyph: " ".to_string(),
         style: Style {
             fg: None,
             bg: Some(52),
@@ -769,18 +771,20 @@ fn hline_and_vline_place_repeated_glyphs() {
     let mut r = Renderer::new(5, 4, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::HLine {
+    f.ops.push(RenderOp::FillRect {
         x: 1,
         y: 1,
-        len: 3,
-        glyph: "-".to_string(),
+        w: 3,
+        h: 1,
+        glyph: "─".to_string(),
         style: Style::plain(),
     });
-    f.ops.push(RenderOp::VLine {
+    f.ops.push(RenderOp::FillRect {
         x: 3,
         y: 0,
-        len: 2,
-        glyph: "|".to_string(),
+        w: 1,
+        h: 2,
+        glyph: "│".to_string(),
         style: Style::plain(),
     });
     r.apply(&f);
@@ -790,7 +794,7 @@ fn hline_and_vline_place_repeated_glyphs() {
         assert_eq!(
             r.grid().get(x, 1).unwrap(),
             &Cell::Glyph {
-                grapheme: "-".to_string(),
+                grapheme: "─".to_string(),
                 style: Style::plain()
             }
         );
@@ -799,7 +803,7 @@ fn hline_and_vline_place_repeated_glyphs() {
     assert_eq!(
         r.grid().get(3, 1).unwrap(),
         &Cell::Glyph {
-            grapheme: "|".to_string(),
+            grapheme: "│".to_string(),
             style: Style::plain()
         }
     );
@@ -808,7 +812,7 @@ fn hline_and_vline_place_repeated_glyphs() {
         assert_eq!(
             r.grid().get(3, y).unwrap(),
             &Cell::Glyph {
-                grapheme: "|".to_string(),
+                grapheme: "│".to_string(),
                 style: Style::plain()
             }
         );
@@ -822,17 +826,18 @@ fn hline_len_is_cells_for_wide_glyphs() {
 
     let mut f = Frame::default();
     // len=3 cells: only one 🙂 (2 cells) can be placed.
-    f.ops.push(RenderOp::HLine {
+    f.ops.push(RenderOp::FillRect {
         x: 0,
         y: 0,
-        len: 3,
-        glyph: "🙂".to_string(),
+        w: 3,
+        h: 1,
+        glyph: "界".to_string(),
         style: Style::plain(),
     });
     r.apply(&f);
 
     match r.grid().get(0, 0).unwrap() {
-        Cell::Glyph { grapheme, .. } => assert_eq!(grapheme, "🙂"),
+        Cell::Glyph { grapheme, .. } => assert_eq!(grapheme, "界"),
         other => panic!("unexpected cell at (0,0): {other:?}"),
     }
     assert_eq!(r.grid().get(1, 0).unwrap(), &Cell::Continuation);
@@ -888,30 +893,39 @@ fn box_draws_expected_border_ascii() {
         }
     );
 
-    // Top edge middle
-    assert_eq!(
-        g.get(2, 0).unwrap(),
-        &Cell::Glyph {
-            grapheme: "-".to_string(),
-            style: Style::plain()
+    // Top edge middle (some environments prefer Unicode single-line characters; accept both).
+    match g.get(2, 0).unwrap() {
+        Cell::Glyph { grapheme, style } => {
+            assert!(
+                (grapheme == "-" || grapheme == "─"),
+                "unexpected top edge glyph: {grapheme}"
+            );
+            assert_eq!(*style, Style::plain());
         }
-    );
+        other => panic!("unexpected cell at (2,0): {other:?}"),
+    }
 
-    // Side edge middle
-    assert_eq!(
-        g.get(0, 1).unwrap(),
-        &Cell::Glyph {
-            grapheme: "|".to_string(),
-            style: Style::plain()
+    // Side edge middle (some environments prefer Unicode single-line characters; accept both).
+    match g.get(0, 1).unwrap() {
+        Cell::Glyph { grapheme, style } => {
+            assert!(
+                (grapheme == "|" || grapheme == "│"),
+                "unexpected side edge glyph: {grapheme}"
+            );
+            assert_eq!(*style, Style::plain());
         }
-    );
-    assert_eq!(
-        g.get(4, 1).unwrap(),
-        &Cell::Glyph {
-            grapheme: "|".to_string(),
-            style: Style::plain()
+        other => panic!("unexpected cell at (0,1): {other:?}"),
+    }
+    match g.get(4, 1).unwrap() {
+        Cell::Glyph { grapheme, style } => {
+            assert!(
+                (grapheme == "|" || grapheme == "│"),
+                "unexpected side edge glyph: {grapheme}"
+            );
+            assert_eq!(*style, Style::plain());
         }
-    );
+        other => panic!("unexpected cell at (4,1): {other:?}"),
+    }
 }
 
 #[test]
@@ -1071,12 +1085,15 @@ fn put_wrapped_wraps_words() {
     let mut r = Renderer::new(10, 3, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutWrapped {
+    f.ops.push(RenderOp::TextBlock {
         x: 0,
         y: 0,
         w: 6,
+
+        h: u16::MAX,
         text: "Hello world".to_string(),
         style: Style::plain(),
+        wrap: WrapOpts::default(),
     });
     r.apply(&f);
 
@@ -1187,7 +1204,8 @@ fn blit_transparent_cells_and_wide_glyph_skip_next_source_cell() {
         cells: vec![
             None,
             Some(BlitCell {
-                glyph: "🙂".to_string(),
+                // Use a CJK glyph which is reliably wide (2 cells) under wcwidth.
+                glyph: "界".to_string(),
                 style: Style {
                     fg: None,
                     bg: None,
@@ -1241,7 +1259,7 @@ fn blit_transparent_cells_and_wide_glyph_skip_next_source_cell() {
     assert_eq!(
         g.get(3, 0).unwrap(),
         &Cell::Glyph {
-            grapheme: "🙂".to_string(),
+            grapheme: "界".to_string(),
             style: Style {
                 fg: None,
                 bg: None,
@@ -1290,13 +1308,16 @@ fn put_wrapped_hard_breaks_long_word() {
     let mut r = Renderer::new(6, 3, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutWrapped {
+    f.ops.push(RenderOp::TextBlock {
         x: 0,
         y: 0,
         w: 4,
+
+        h: u16::MAX,
         // Long word: wraps by hard-breaking to width.
         text: "ABCDEF".to_string(),
         style: Style::plain(),
+        wrap: WrapOpts::default(),
     });
     r.apply(&f);
 
@@ -1356,15 +1377,16 @@ fn put_wrapped_styled_respects_max_lines_and_does_not_write_beyond_limit() {
     let mut r = Renderer::new(12, 4, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutWrappedStyled {
+    f.ops.push(RenderOp::TextBlockStyled {
         x: 0,
         y: 0,
         w: 10,
+        h: 2,
         spans: vec![Span::new(
             "One two three four five six seven eight nine ten.",
             Style::plain(),
         )],
-        wrap_opts: WrapOpts {
+        wrap: WrapOpts {
             continuation_prefix: Some(vec![Span::new(
                 "↳ ",
                 Style {
@@ -1381,7 +1403,6 @@ fn put_wrapped_styled_respects_max_lines_and_does_not_write_beyond_limit() {
             )]),
             ..WrapOpts::default()
         },
-        max_lines: Some(2),
     });
 
     r.apply(&f);
@@ -1419,13 +1440,13 @@ fn put_wrapped_styled_with_zero_width_renders_nothing() {
     let mut r = Renderer::new(8, 2, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutWrappedStyled {
+    f.ops.push(RenderOp::TextBlockStyled {
         x: 0,
         y: 0,
         w: 0,
         spans: vec![Span::new("Hello", Style::plain())],
-        wrap_opts: WrapOpts::default(),
-        max_lines: None,
+        wrap: WrapOpts::default(),
+        h: u16::MAX,
     });
 
     r.apply(&f);
@@ -1443,7 +1464,7 @@ fn put_styled_respects_w_hard_bound() {
     let mut r = Renderer::new(8, 1, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutStyled {
+    f.ops.push(RenderOp::LabelStyled {
         x: 0,
         y: 0,
         w: 3,
@@ -1480,13 +1501,13 @@ fn put_wrapped_styled_respects_w_hard_bound() {
     let mut r = Renderer::new(6, 2, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutWrappedStyled {
+    f.ops.push(RenderOp::TextBlockStyled {
         x: 0,
         y: 0,
         w: 4,
         spans: vec![Span::new("ABCDE", Style::plain())],
-        wrap_opts: WrapOpts::default(),
-        max_lines: None,
+        wrap: WrapOpts::default(),
+        h: u16::MAX,
     });
 
     r.apply(&f);
@@ -1532,12 +1553,15 @@ fn put_wrapped_respects_w_hard_bound() {
     let mut r = Renderer::new(8, 2, reg).expect("renderer");
 
     let mut f = Frame::default();
-    f.ops.push(RenderOp::PutWrapped {
+    f.ops.push(RenderOp::TextBlock {
         x: 0,
         y: 0,
         w: 3,
+
+        h: u16::MAX,
         text: "ABCDEFG".to_string(),
         style: Style::plain(),
+        wrap: WrapOpts::default(),
     });
 
     r.apply(&f);

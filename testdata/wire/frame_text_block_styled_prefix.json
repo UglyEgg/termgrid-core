@@ -1,0 +1,29 @@
+{
+  "ops": [
+    {
+      "h": 3,
+      "op": "text_block_styled",
+      "spans": [
+        {
+          "text": "Hello world"
+        }
+      ],
+      "w": 10,
+      "wrap": {
+        "continuation_prefix": [
+          {
+            "style": {
+              "bold": true
+            },
+            "text": "> "
+          }
+        ],
+        "hard_break_long_tokens": true,
+        "preserve_spaces": false,
+        "trim_end": true
+      },
+      "x": 0,
+      "y": 0
+    }
+  ]
+}
