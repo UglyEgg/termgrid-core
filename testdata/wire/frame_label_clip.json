@@ -1,0 +1,5 @@
+{
+  "ops": [
+    { "op": "label", "x": 1, "y": 2, "w": 10, "text": "Player: Ms. Smith" }
+  ]
+}

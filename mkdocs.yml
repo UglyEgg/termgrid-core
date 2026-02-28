@@ -1,0 +1,111 @@
+site_name: termgrid-core
+site_url: https://termgrid.entropy.quest
+site_description: Deterministic terminal grid state engine with invariant enforcement and backend decoupling.
+
+repo_name: UglyEgg/termgrid-core
+repo_url: https://github.com/UglyEgg/termgrid-core
+edit_uri: edit/main/docs/
+
+copyright: "&copy; 2026 Richard Majewski - Varanid Works."
+
+strict: true
+use_directory_urls: true
+
+theme:
+  name: material
+  features:
+    - content.action.edit
+    - content.action.view
+    - content.code.copy
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: lucide/sun-moon
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: lucide/sun
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: orange
+      toggle:
+        icon: lucide/moon-star
+        name: Switch to system preference
+  custom_dir: docs/overrides
+
+plugins:
+  - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/UglyEgg/termgrid-core
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:zensical.extensions.emoji.to_svg
+      emoji_index: !!python/name:zensical.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Overview: index.md
+  - Architecture:
+      - System architecture: architecture.md
+      - Invariants: invariants.md
+      - Non-goals: non-goals.md
+      - Rationale: rationale.md
+      - Performance: performance.md
+  - Contracts:
+      - Rendering model: contracts/rendering-model.md
+      - Style model: contracts/style-model.md
+      - Wire format v1: contracts/wire-format-v1.md
+  - Guides:
+      - Getting started: guides/getting-started.md
+      - Writing a backend: guides/writing-a-backend.md
+      - Backend integration: guides/backend-integration.md
+  - Reference:
+      - Public API: reference/public-api.md
+      - Feature flags: reference/feature-flags.md
+      - Rust API (rustdoc): reference/rustdoc.md
+  - Appendix:
+      - Glossary: appendix/glossary.md
+      - MSRV and dependency policy: appendix/MSRV_AND_DEPENDENCY_POLICY.md
+      - Damage model: appendix/damage-model.md
+      - Unicode model: appendix/unicode-model.md
+      - Replay and snapshots: appendix/replay-and-snapshots.md
+      - Stream rendering comparison: appendix/comparison-stream-rendering.md
+      - Animation cookbook: appendix/ANIMATION_COOKBOOK.md
+      - AI integration guide: appendix/AI_INTEGRATION_GUIDE.md

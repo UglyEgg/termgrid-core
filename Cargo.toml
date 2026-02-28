@@ -1,0 +1,46 @@
+[package]
+name = "termgrid-core"
+version = "1.5.4"
+edition = "2021"
+
+description = "Deterministic terminal grid state engine with invariant enforcement and backend decoupling."
+license = "AGPL-3.0-or-later OR LicenseRef-VaranidWorks-Commercial-1.0"
+
+readme = "README.md"
+homepage = "https://termgrid.entropy.quest"
+repository = "https://github.com/UglyEgg/termgrid-core"
+documentation = "https://docs.rs/termgrid-core"
+
+# Keep the published crate lean and deterministic.
+# (Vendored consumers still have the full repo; crates.io users get the crate.)
+exclude = [
+  "/.cache/",
+  "/.github/",
+  "/.venv/",
+  "/scripts/",
+  "/site/",
+  "/target/",
+  "**/*.log",
+]
+
+keywords = ["tui", "terminal", "unicode", "deterministic", "rendering"]
+categories = ["command-line-interface", "text-processing"]
+rust-version = "1.82"
+
+[dependencies]
+unicode-segmentation = "1.11"
+unicode-normalization = "0.1"
+unicode-width = "0.1.14"
+serde = { version = "1", features = ["derive"] }
+thiserror = "1"
+[dev-dependencies]
+pretty_assertions = "1"
+proptest = "1"
+serde_json = "1"
+
+[features]
+debug-validate = []
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

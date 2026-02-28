@@ -1,0 +1,15 @@
+{
+  "ops": [
+    {
+      "op": "put_wrapped_styled",
+      "x": 1,
+      "y": 1,
+      "w": 10,
+      "spans": [
+        { "text": "Press " },
+        { "text": "Enter", "style": { "fg": 15 } },
+        { "text": " to confirm." }
+      ]
+    }
+  ]
+}

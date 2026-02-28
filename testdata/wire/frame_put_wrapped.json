@@ -1,0 +1,5 @@
+{
+  "ops": [
+    { "op": "put_wrapped", "x": 0, "y": 0, "w": 8, "text": "Welcome to VoidJack. Disconnecting forfeits the run." }
+  ]
+}

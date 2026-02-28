@@ -1,0 +1,21 @@
+{
+  "ops": [
+    {
+      "op": "put_wrapped_styled",
+      "x": 0,
+      "y": 0,
+      "w": 10,
+      "wrap_opts": {
+        "preserve_spaces": false,
+        "hard_break_long_tokens": true,
+        "trim_end": true,
+        "continuation_prefix": [
+          { "text": "↳ ", "style": { "fg": 8 } }
+        ]
+      },
+      "spans": [
+        { "text": "one two three four" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+/* =============================================================================
+   termgrid-core docs: footer + brand mark styling (Zensical/MkDocs)
+   - Theme-aware via site toggle (Material-style) AND OS fallback
+   - Small, non-jarring footer mark
+   ========================================================================== */
+
+/* -------- 1) Theme-aware variables (site toggle first, OS fallback) -------- */
+
+/* Default (light) */
+:root {
+  --vw-footer-bg: #f3f3f3;
+  --vw-footer-fg: rgba(0, 0, 0, 0.78);
+  --vw-footer-link: rgba(0, 0, 0, 0.86);
+  --vw-footer-border: rgba(0, 0, 0, 0.1);
+
+  --vw-mark-height: 12px; /* "brand bug" size */
+  --vw-text-size: 0.95rem; /* 1–2 steps above typical footer */
+}
+
+/* If the site theme uses Material-style palette attribute, honor it */
+[data-md-color-scheme="slate"] {
+  --vw-footer-bg: #000;
+  --vw-footer-fg: rgba(255, 255, 255, 0.82);
+  --vw-footer-link: rgba(255, 255, 255, 0.92);
+  --vw-footer-border: rgba(255, 255, 255, 0.14);
+}
+
+/* OS fallback if no site toggle attribute exists */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --vw-footer-bg: #000;
+    --vw-footer-fg: rgba(255, 255, 255, 0.82);
+    --vw-footer-link: rgba(255, 255, 255, 0.92);
+    --vw-footer-border: rgba(255, 255, 255, 0.14);
+  }
+}
+
+/* -------- 2) Apply variables to common footer containers -------- */
+
+footer,
+.md-footer,
+.md-footer-meta {
+  background: var(--vw-footer-bg) !important;
+  color: var(--vw-footer-fg) !important;
+  border-top: 1px solid var(--vw-footer-border) !important;
+}
+
+/* Links in footer */
+footer a,
+.md-footer a,
+.md-footer-meta a {
+  color: var(--vw-footer-link) !important;
+  text-decoration: none;
+}
+
+footer a:hover,
+.md-footer a:hover,
+.md-footer-meta a:hover {
+  text-decoration: underline;
+}
+
+/* -------- 3) Varanid Works custom footer content block -------- */
+
+.vw-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  white-space: nowrap;
+}
+
+.vw-mark {
+  height: var(--vw-mark-height);
+  width: auto;
+  opacity: 0.85;
+}
+
+/* Slightly larger footer text for proportionality */
+.vw-footer span {
+  font-size: var(--vw-text-size);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}

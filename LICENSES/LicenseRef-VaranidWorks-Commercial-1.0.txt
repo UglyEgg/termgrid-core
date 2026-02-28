@@ -1,0 +1,92 @@
+VARANID WORKS COMMERCIAL LICENSE (LicenseRef-VaranidWorks-Commercial-1.0)
+
+Copyright (c) 2026 Richard Majewski
+All rights reserved.
+
+This is a proprietary commercial license alternative to the GNU Affero General
+Public License v3.0 or later (AGPL-3.0-or-later).
+
+This license is intended for organizations that wish to use termgrid-core in
+proprietary products without the obligations of the AGPL.
+
+1. Definitions
+
+"Licensor" means Richard Majewski (and/or the entity operating under the name
+"Varanid Works").
+
+"Licensee" means the single legal entity identified in a written commercial
+agreement with Licensor (for example an order form, invoice, or signed
+agreement) that references this license.
+
+"Software" means the termgrid-core codebase and associated documentation.
+
+"Product" means a software application or service distributed by Licensee.
+
+"Embedded" means included as a component of a Product (for example as a linked
+library, vendored source, or compiled artifact) where the Product provides
+substantial additional functionality beyond the Software itself.
+
+2. Grant of Rights
+
+Subject to payment of applicable fees and ongoing compliance with this license,
+Licensor grants Licensee a worldwide, non-exclusive license to:
+
+  a) use the Software for Licensee's internal development and operations;
+  b) modify the Software; and
+  c) distribute the Software only as Embedded within Licensee Products.
+
+3. Restrictions
+
+Licensee must not:
+
+  a) sublicense the Software to any third party;
+  b) distribute the Software on a standalone basis (for example as a separate
+     library, SDK, crate, or "developer tool" product), whether modified or not;
+  c) rebrand, rename, or repackage the Software (or a derivative) as a
+     competing or substitute library/toolkit and offer it to third parties;
+  d) remove or alter copyright notices in the Software; or
+  e) use the Software's name or trademarks to imply endorsement by Licensor.
+
+4. Entity Binding; Transfer
+
+This license is granted only to Licensee as identified in the written
+commercial agreement.
+
+This license is non-transferable and non-assignable, except with Licensor's
+prior written consent.
+
+For clarity, changes in corporate structure, mergers, acquisitions, or name
+changes require Licensor's written consent to transfer or reissue the license.
+
+5. Attribution (Optional)
+
+Attribution to Licensor/termgrid-core in Product documentation is appreciated
+but not required.
+
+6. Term and Termination
+
+This license remains effective until terminated.
+
+Licensor may terminate this license if Licensee materially breaches its terms
+and fails to cure the breach within thirty (30) days after written notice.
+
+Upon termination, Licensee must cease distribution of the Software in Products.
+Licensee may retain copies for archival and compliance purposes.
+
+7. Warranty Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. LICENSOR
+DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+8. Limitation of Liability
+
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, LICENSOR SHALL NOT BE LIABLE FOR ANY
+INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR ANY LOSS
+OF PROFITS, REVENUE, DATA, OR BUSINESS INTERRUPTION, ARISING FROM OR RELATED TO
+THE SOFTWARE OR THIS LICENSE.
+
+9. Governing Law
+
+This license is governed by the laws of the jurisdiction agreed in the written
+commercial agreement between Licensor and Licensee.
