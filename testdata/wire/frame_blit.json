@@ -1,17 +1,1 @@
-{
-  "ops": [
-    {
-      "op": "blit",
-      "x": 2,
-      "y": 0,
-      "w": 4,
-      "h": 1,
-      "cells": [
-        null,
-        { "glyph": "🙂", "style": { "bold": true } },
-        { "glyph": "X" },
-        { "glyph": "|" }
-      ]
-    }
-  ]
-}
+{"ops":[{"cells":[{"glyph":"A"},null],"h":1,"op":"blit","w":2,"x":0,"y":0}]}

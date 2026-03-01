@@ -87,7 +87,7 @@ fn main() {
             base
         };
 
-        frame.ops.push(RenderOp::PutStyled {
+        frame.ops.push(RenderOp::LabelStyled {
             x: 2,
             y,
             w: 60,

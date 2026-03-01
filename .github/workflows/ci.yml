@@ -2,7 +2,7 @@ name: ci
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
   workflow_dispatch: {}
 
@@ -34,16 +34,16 @@ jobs:
         run: cargo test --workspace --all-targets --all-features
 
   msrv:
-    name: msrv (1.82)
+    name: msrv (1.85)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Rust (1.82)
+      - name: Set up Rust (1.85)
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: 1.82
+          toolchain: 1.85
 
       - name: Rust cache
         uses: Swatinem/rust-cache@v2

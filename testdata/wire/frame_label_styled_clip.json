@@ -1,15 +1,1 @@
-{
-  "ops": [
-    {
-      "op": "label_styled",
-      "x": 1,
-      "y": 1,
-      "w": 6,
-      "spans": [
-        { "text": "Hi " },
-        { "text": "🙂", "style": { "fg": 15, "bold": true } },
-        { "text": "World" }
-      ]
-    }
-  ]
-}
+{"ops":[{"op":"label_styled","spans":[{"text":"Hi"}],"w":10,"x":0,"y":0}]}

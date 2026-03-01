@@ -1,5 +1,1 @@
-{
-  "ops": [
-    {"op": "clear_line", "y": 2}
-  ]
-}
+{"ops":[{"op":"clear_line","y":1}]}

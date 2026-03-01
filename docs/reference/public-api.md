@@ -58,10 +58,10 @@ A batch of operations for a single tick.
 A single operation applied by the renderer. Current operations include (non-exhaustive summary; see rustdoc for full detail):
 
 - Clear and erase ops: `Clear`, `ClearLine`, `ClearEol`, `ClearBol`, `ClearEos`, `ClearRect`
-- Text ops: `Put`, `PutGlyph`, `PutStyled`, `PutWrapped`, `PutWrappedStyled`
+- Text ops: `Put`, `PutGlyph`, `Label`, `LabelStyled`, `TextBlock`, `TextBlockStyled`
 - Label ops: `Label`, `LabelStyled`
 - Region ops: `FillRect`
-- Line/box ops: `HLine`, `VLine`, `Box`
+- Rect/box ops: `FillRect`, `Box`
 - Blit ops: `Blit` (structured cell payload)
 
 ### `BlitCell`

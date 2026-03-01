@@ -37,6 +37,7 @@ fn op_strategy(max_w: u16, max_h: u16) -> impl Strategy<Value = RenderOp> {
                 y: yy,
                 w: ww,
                 h: hh,
+                glyph: " ".to_string(),
                 style: Style::plain(),
             }
         }),

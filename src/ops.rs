@@ -26,40 +26,30 @@ pub struct BlitCell {
     pub style: Style,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum BoxCharset {
     /// ASCII `+`, `-`, `|`.
     Ascii,
     /// Unicode single-line box drawing characters.
+    #[default]
     UnicodeSingle,
     /// Unicode double-line box drawing characters.
     UnicodeDouble,
-}
-
-impl Default for BoxCharset {
-    fn default() -> Self {
-        Self::UnicodeSingle
-    }
 }
 
 fn is_default_truncate_mode(m: &TruncateMode) -> bool {
     *m == TruncateMode::default()
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum TruncateMode {
     /// Drop any glyphs that do not fit.
+    #[default]
     Clip,
     /// Replace the tail with an ellipsis ("…") when truncation occurs.
     Ellipsis,
-}
-
-impl Default for TruncateMode {
-    fn default() -> Self {
-        Self::Clip
-    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -140,114 +130,63 @@ pub enum RenderOp {
         truncate: TruncateMode,
     },
 
-    /// Put a single-line styled label (spans), clipped to `w` cells.
+    /// Put a multi-line block of text, wrapped and clipped within a rectangle.
     ///
-    /// This op is useful for UI where inline styling is needed (for example,
-    /// highlighted search matches or mixed emphasis).
-    PutStyled {
+    /// This is a higher-level convenience op.
+    TextBlock {
         x: u16,
         y: u16,
-        /// Maximum width in cells.
         w: u16,
-        spans: Vec<Span>,
-        #[serde(default, skip_serializing_if = "is_default_truncate_mode")]
-        truncate: TruncateMode,
+        h: u16,
+        text: String,
+        #[serde(default, skip_serializing_if = "is_plain_style")]
+        style: Style,
+        #[serde(default, skip_serializing_if = "is_default_wrap_opts")]
+        wrap: WrapOpts,
     },
 
-    /// Put wrapped text within `w` cells, flowing downward from (`x`,`y`).
-    ///
-    /// Wrapping is whitespace-aware with hard-break fallback for long words.
-    PutWrapped {
+    /// Put a styled multi-line block (spans), wrapped and clipped within a rectangle.
+    TextBlockStyled {
         x: u16,
         y: u16,
-        /// Wrap width in cells.
         w: u16,
-        text: String,
+        h: u16,
+        spans: Vec<Span>,
+        #[serde(default, skip_serializing_if = "is_default_wrap_opts")]
+        wrap: WrapOpts,
+    },
+
+    /// Fill a rectangle with a single glyph.
+    FillRect {
+        x: u16,
+        y: u16,
+        w: u16,
+        h: u16,
+        glyph: String,
         #[serde(default, skip_serializing_if = "is_plain_style")]
         style: Style,
     },
 
-    /// Put wrapped styled text (spans) within `w` cells, flowing downward from (`x`,`y`).
-    ///
-    /// Wrapping is whitespace-aware with hard-break fallback for long tokens.
-    /// Use `wrap_opts` to control whitespace preservation and trimming.
-    PutWrappedStyled {
+    /// Draw a box (border) around a rectangle.
+    Box {
         x: u16,
         y: u16,
-        /// Wrap width in cells.
         w: u16,
-        spans: Vec<Span>,
-        #[serde(default, skip_serializing_if = "is_default_wrap_opts")]
-        wrap_opts: WrapOpts,
-        /// Optional maximum number of visual lines to render.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        max_lines: Option<u16>,
+        h: u16,
+        #[serde(default, skip_serializing_if = "is_default_charset")]
+        charset: BoxCharset,
+        #[serde(default, skip_serializing_if = "is_plain_style")]
+        style: Style,
     },
 
-    /// Blit (copy) a small source cell-map onto the grid.
+    /// Blit a rectangular payload of optional cells.
     ///
-    /// - `cells` is a row-major array of length `w*h`.
-    /// - `null` cells are transparent (leave destination unchanged).
-    /// - Wide glyphs (width=2) occupy two destination cells; the next source cell
-    ///   in that row is ignored.
+    /// `cells` is row-major with length `w*h`.
     Blit {
         x: u16,
         y: u16,
         w: u16,
         h: u16,
         cells: Vec<Option<BlitCell>>,
-    },
-
-    /// Fill a rectangle with styled spaces.
-    ///
-    /// Use this for clearing regions and for background fills.
-    FillRect {
-        x: u16,
-        y: u16,
-        w: u16,
-        h: u16,
-        #[serde(default, skip_serializing_if = "is_plain_style")]
-        style: Style,
-    },
-
-    /// Draw a horizontal line using a single glyph.
-    ///
-    /// `len` is measured in **cells**. For width=2 glyphs, placement will stop
-    /// when fewer than 2 cells remain.
-    #[serde(rename = "hline")]
-    HLine {
-        x: u16,
-        y: u16,
-        len: u16,
-        glyph: String,
-        #[serde(default, skip_serializing_if = "is_plain_style")]
-        style: Style,
-    },
-
-    /// Draw a vertical line using a single glyph.
-    ///
-    /// `len` is measured in **rows**.
-    #[serde(rename = "vline")]
-    VLine {
-        x: u16,
-        y: u16,
-        len: u16,
-        glyph: String,
-        #[serde(default, skip_serializing_if = "is_plain_style")]
-        style: Style,
-    },
-
-    /// Draw a bordered box.
-    ///
-    /// The box is clipped to the grid bounds.
-    Box {
-        x: u16,
-        y: u16,
-        w: u16,
-        h: u16,
-        #[serde(default, skip_serializing_if = "is_plain_style")]
-        style: Style,
-        #[serde(default, skip_serializing_if = "is_default_charset")]
-        charset: BoxCharset,
     },
 }
