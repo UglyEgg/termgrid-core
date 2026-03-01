@@ -1,6 +1,6 @@
 [package]
 name = "termgrid-core"
-version = "1.5.4"
+version = "1.5.5"
 edition = "2021"
 
 description = "Deterministic terminal grid state engine with invariant enforcement and backend decoupling."
