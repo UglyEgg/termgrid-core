@@ -7,8 +7,7 @@
 [![MSRV](https://img.shields.io/badge/MSRV-1.85-blue)](#msrv)
 [![License](https://img.shields.io/badge/license-AGPL%20%2B%20commercial-informational)](#license)
 
-[![ci: stable](https://github.com/UglyEgg/termgrid-core/actions/workflows/ci.yml/badge.svg)](https://github.com/UglyEgg/termgrid-core/actions/workflows/ci.yml)
-[![ci: msrv](https://github.com/UglyEgg/termgrid-core/actions/workflows/ci.yml/badge.svg)](https://github.com/UglyEgg/termgrid-core/actions/workflows/ci.yml)
+[![ci](https://github.com/UglyEgg/termgrid-core/actions/workflows/ci.yml/badge.svg)](https://github.com/UglyEgg/termgrid-core/actions/workflows/ci.yml)
 [![docs](https://github.com/UglyEgg/termgrid-core/actions/workflows/docs.yml/badge.svg)](https://github.com/UglyEgg/termgrid-core/actions/workflows/docs.yml)
 
 `termgrid-core` is a deterministic terminal grid state engine.

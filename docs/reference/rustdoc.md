@@ -2,7 +2,7 @@
 
 The API reference for `termgrid-core` is generated from the exact source revision used to build this site.
 
-- Open rustdoc: [termgrid-core API]({{ '/api/termgrid_core/index.html' | url }})
+- Open rustdoc: [/api/termgrid_core/index.html](../../api/termgrid_core/index.html)
 
 ## Notes
 
